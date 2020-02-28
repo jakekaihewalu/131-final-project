@@ -1,0 +1,61 @@
+---
+title: "Project Proposal"
+author: 
+  - Team Member (Perm \#)
+  - Team Member (Perm \#)
+  - Team Member (Perm \#)
+  - Team Member (Perm \#)
+date: "`r format(Sys.Date(), '%B %d, %Y')`"
+output: pdf_document
+---
+
+# Research Question
+
+# Data 
+
+# Analysis Plan
+
+# References
+
+\newpage
+
+# Data Overview
+
+```{r}
+## read in data
+library(readxl)
+ENB2012_data <- read_excel("~/Desktop/PSTAT 131/PSTAT131/Final Project/ENB2012_data.xlsx")
+building_data_full <- rename(ENB2012_data, c('X1' = 'RC', 'X2'='surfaceA', 'X3'='wallA', 'X4'='roofA', 'X5'='height', 'X6'='orientation', 'X7'='glazingA', 'X8'='glazingAdist', 'Y1'='heatingload', 'Y2' = 'coolingload'))
+building_data_full <- as.data.frame(scale(building_data_full, center=TRUE, scale = TRUE))
+
+#create binary response from cooling
+building_data = building_data_full %>%
+mutate(coolingload_level=as.factor(ifelse(coolingload <= median(coolingload), "Low", "High"))) %>% select(-coolingload, -heatingload, -roofA)
+
+head(building_data)
+dim(building_data)
+
+## missingness
+apply(is.na(building_data), 2, sum)
+```
+
+```{r}
+## Split the data 
+set.seed(3)
+id <- sample(1:nrow(building_data), 0.80*nrow(building_data))
+building_data.train <- building_data[id,]
+building_data.test <- building_data[-id,]
+dim(building_data.train)
+dim(building_data.test)
+```
+
+```{r}
+#sumarize response
+summary(building_data.train$coolingload_level)
+```
+
+```{r}
+#basic model
+glm.fit <- glm(coolingload_level ~ ., data = building_data.train, family = binomial)
+summary(glm.fit)
+```

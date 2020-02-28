@@ -1,0 +1,57 @@
+---
+title: "Project Proposal"
+author: 
+  - Team Member (Perm \#)
+  - Team Member (Perm \#)
+  - Team Member (Perm \#)
+  - Team Member (Perm \#)
+date: "`r format(Sys.Date(), '%B %d, %Y')`"
+output: pdf_document
+---
+
+# Research Question
+
+# Data 
+
+# Analysis Plan
+
+# References
+
+\newpage
+
+# Data Overview
+
+```{r}
+## read in data
+abalone_data_full <- read.csv("~/Desktop/PSTAT 131/PSTAT131/Final Project/abalone_data.csv", header=FALSE)
+abalone_data_full <- rename(abalone_data_full, c('V1' = 'sex', 'V2' = 'length', 'V3' = 'diameter', 'V4' = 'Height', 'V5'='whole_weight', 'V6' = 'shucked_weight', 'V7' = 'viscera_weight', 'V8' = 'shell_weight', 'V9' = 'rings'))
+
+##classify rings
+abalone_data = abalone_data_full %>%
+mutate(old=as.factor(ifelse(rings <= median(rings), 1, 0)))
+
+## missingness
+apply(is.na(abalone_data), 2, sum)
+```
+
+```{r}
+## Split the data 
+set.seed(3)
+id <- sample(1:nrow(abalone_data), 0.75*nrow(abalone_data))
+abalone_data.train <- abalone_data[id,]
+abalone_data.test <- abalone_data[-id,]
+dim(abalone_data.train)
+dim(abalone_data.test)
+```
+
+```{r}
+#sumarize response
+summary(abalone_data.train$old)
+```
+
+```{r}
+#basic model
+glm.fit <- glm(old ~ whole_weight + length + Height, data = abalone_data.train, family = binomial)
+summary(glm.fit)
+```
+
