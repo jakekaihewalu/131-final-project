@@ -1,15 +1,16 @@
 ---
 title: "Project Proposal"
 author: 
-  - Team Member (Perm \#)
-  - Team Member (Perm \#)
-  - Team Member (Perm \#)
-  - Team Member (Perm \#)
+  - Jake Kaihewalu (4012753)
+  - Jasmine Kellogg (4266367)
+  - Andrew Nguyen (5495395)
+  - Masaki Osato (4222154)
 date: "`r format(Sys.Date(), '%B %d, %Y')`"
 output: pdf_document
 ---
 
 # Research Question
+Can the presence of cardiovascualr disease be accurately predicted based off of a combination of objective, subjective, and examination information?
 
 # Data 
 

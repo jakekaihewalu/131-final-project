@@ -1,0 +1,67 @@
+---
+title: "Updated Project Proposal"
+author: 
+  - Jake Kaihewalu (4012753)
+  - Jasmine Kellogg (4266367)
+  - Andrew Nguyen (5495395)
+  - Masaki Osato (4222154)
+date: "`r format(Sys.Date(), '%B %d, %Y')`"
+output: pdf_document
+---
+
+# Research Question
+Can the presence of cardiovascualr disease be accurately predicted based off of a combination of objective, subjective, and examination information?
+
+# Data 
+
+# Analysis Plan
+
+# References
+
+\newpage
+
+# Data Overview
+
+```{r}
+library(readr)
+library(dplyr)
+set.seed(9)
+
+## read in data
+cardio_full <- read_delim("cardio_train.csv", ";", escape_double = FALSE, trim_ws = TRUE)
+
+cardio_full$gender <- as.factor(cardio_full$gender)
+cardio_full$cholesterol <- as.factor(cardio_full$cholesterol)
+cardio_full$gluc <- as.factor(cardio_full$gluc)
+cardio_full$smoke <- as.factor(cardio_full$smoke)
+cardio_full$alco <- as.factor(cardio_full$alco)
+cardio_full$active <- as.factor(cardio_full$active)
+cardio_full$cardio <- as.factor(cardio_full$cardio)
+
+dim(cardio_full)
+head(cardio_full)
+```
+
+```{r}
+## Going to be working with a random sample of n = 10,000 for computational purposes
+cardio_sample <- sample_n(cardio_full, 10000)
+
+## Split the data
+id <- sample(1:nrow(cardio_sample), 0.75*nrow(cardio_sample))
+cardio_sample.train <- cardio_sample[id,]
+cardio_sample.test <- cardio_sample[-id,]
+dim(cardio_sample.train)
+dim(cardio_sample.test)
+```
+
+```{r}
+#sumary statistics
+summary(cardio_sample.train)
+```
+
+```{r}
+#basic model
+glm.fit <- glm(cardio ~ age + cholesterol + active, data = cardio_sample.train, family = binomial)
+summary(glm.fit)
+```
+
