@@ -1,6 +1,6 @@
 ---
-title: "Updated Project Proposal"
-author: 
+title: "Project Proposal 2"
+author:  
   - Jake Kaihewalu (4012753)
   - Jasmine Kellogg (4266367)
   - Andrew Nguyen (5495395)
@@ -8,10 +8,9 @@ author:
 date: "`r format(Sys.Date(), '%B %d, %Y')`"
 output: pdf_document
 ---
+# Research Question 
 
-# Research Question
-
-Can the presence of cardiovascualr disease be accurately predicted based off of a combination of objective, subjective, and examination data?
+Can we classify whether or not a patient has cardiovascular disease based on a variety of catergorical and numeric variables?
 
 # Data
 
@@ -27,48 +26,35 @@ Cardiovascular Disease Dataset. Ulianova, Svetlana. Kaggle, 20 Jan. 2019, [www.k
 
 \newpage
 
-# Data Overview
+# Data Overview 
 
 ```{r}
+#Read in data
 library(readr)
-library(dplyr)
-set.seed(9)
+cardio_train <- read.csv("~/131-final-project/Final Project/cardio_train.csv", sep=";")
+#View(cardio_train)
+```
 
-## read in data
-cardio_full <- read_delim("cardio_train.csv", ";", escape_double = FALSE, trim_ws = TRUE)
 
-cardio_full$gender <- as.factor(cardio_full$gender)
-cardio_full$cholesterol <- as.factor(cardio_full$cholesterol)
-cardio_full$gluc <- as.factor(cardio_full$gluc)
-cardio_full$smoke <- as.factor(cardio_full$smoke)
-cardio_full$alco <- as.factor(cardio_full$alco)
-cardio_full$active <- as.factor(cardio_full$active)
-cardio_full$cardio <- as.factor(cardio_full$cardio)
-
-dim(cardio_full)
-head(cardio_full)
+```{r}
+## Split the data 
+set.seed(3)
+id <- sample(1:nrow(cardio_train), 0.75*nrow(cardio_train))
+cardio_train.train <- cardio_train[id,]
+cardio_train.test <- cardio_train[-id,]
+dim(cardio_train.train)
+dim(cardio_train.test)
 ```
 
 ```{r}
-## Going to be working with a random sample of n = 10,000 for computational purposes
-cardio_sample <- sample_n(cardio_full, 10000)
-
-## Split the data
-id <- sample(1:nrow(cardio_sample), 0.75*nrow(cardio_sample))
-cardio_sample.train <- cardio_sample[id,]
-cardio_sample.test <- cardio_sample[-id,]
-dim(cardio_sample.train)
-dim(cardio_sample.test)
+## Summarize response
+summary(cardio_train.train$cardio)
 ```
 
 ```{r}
-#sumary statistics
-summary(cardio_sample.train)
-```
-
-```{r}
-#basic model
-glm.fit <- glm(cardio ~ age + cholesterol + active, data = cardio_sample.train, family = binomial)
+# Basic model
+attach(cardio_train)
+glm.fit <- glm(cardio ~ age + gender + height + weight + ap_hi + ap_lo + cholesterol
+               + gluc + smoke + alco + active)
 summary(glm.fit)
 ```
-
